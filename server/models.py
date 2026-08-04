@@ -66,16 +66,8 @@ class Note(db.Model):
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
-    user_id = db.Column(
-        db.Integer,
-        db.ForeignKey("users.id"),
-        nullable=False
-    )
-
-    user = db.relationship(
-        "User",
-        back_populates="notes"
-    )
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    user = db.relationship("User", back_populates="notes")
 
     @validates("title")
     def validate_title(self, key, title):
@@ -94,18 +86,11 @@ class Note(db.Model):
             "id": self.id,
             "title": self.title,
             "content": self.content,
-            "created_at": (
-                self.created_at.isoformat()
-                if self.created_at
-                else None
-            ),
-            "updated_at": (
-                self.updated_at.isoformat()
-                if self.updated_at
-                else None
-            ),
             "user_id": self.user_id,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
         }
 
     def __repr__(self):
         return f"<Note {self.id}: {self.title}>"
+ 
