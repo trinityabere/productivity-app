@@ -15,6 +15,11 @@ def create_app():
     migrate.init_app(app, db)
     bcrypt.init_app(app)
 
+    from server.routes import auth_bp
+
+    app.register_blueprint(auth_bp)
+
+
     @app.errorhandler(404)
     def not_found(e):
         return jsonify({"error": "Not found."}), 404
